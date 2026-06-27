@@ -1,8 +1,0 @@
-<form>
-    <field>
-        <id>staticd.enabled</id>
-        <label>Enable</label>
-        <type>checkbox</type>
-        <help>This will activate the staticd service.</help>
-    </field>
-</form>
