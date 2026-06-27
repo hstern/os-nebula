@@ -30,24 +30,28 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # Clone the OPNsense build infra on the Ubuntu host (git in the FreeBSD VM
+      # hits a base-lib version skew). The VM only runs `make package`.
+      - name: Fetch OPNsense build infra
+        run: git clone --depth 1 https://github.com/opnsense/plugins op-infra
+
       - name: Build package in a FreeBSD ${{ matrix.release }} VM
         uses: vmactions/freebsd-vm@v1
         with:
           release: ${{ matrix.release }}
           usesh: true
-          prepare: pkg install -y git
+          envs: 'PLUGIN'        # vmactions does not inherit runner env automatically
           run: |
             set -e
-            git clone --depth 1 https://github.com/opnsense/plugins /tmp/op
-            rm -rf /tmp/op/net/${PLUGIN}
-            cp -a net/${PLUGIN} /tmp/op/net/${PLUGIN}
-            cd /tmp/op/net/${PLUGIN}
+            rm -rf "op-infra/net/${PLUGIN}"
+            cp -a "net/${PLUGIN}" "op-infra/net/${PLUGIN}"
+            cd "op-infra/net/${PLUGIN}"
             # PLUGIN_DEVEL= yields the release name (os-nebula, not os-nebula-devel).
-            # The nebula dep is pulled from FreeBSD's pkg repo inside this VM.
+            # make package pulls the binary dep (e.g. nebula) from FreeBSD's pkg repo.
             make package PLUGIN_DEVEL=
-            mkdir -p "$GITHUB_WORKSPACE/dist/${{ matrix.abi }}"
-            find work/pkg -name '*.pkg' -exec cp {} "$GITHUB_WORKSPACE/dist/${{ matrix.abi }}/" \;
-            ls -l "$GITHUB_WORKSPACE/dist/${{ matrix.abi }}/"
+            mkdir -p "${GITHUB_WORKSPACE}/dist/${{ matrix.abi }}"
+            find work/pkg -name '*.pkg' -exec cp {} "${GITHUB_WORKSPACE}/dist/${{ matrix.abi }}/" \;
+            ls -l "${GITHUB_WORKSPACE}/dist/${{ matrix.abi }}/"
 
       - name: Attach .pkg to the release
         if: startsWith(github.ref, 'refs/tags/')
