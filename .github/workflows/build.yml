@@ -35,7 +35,7 @@ jobs:
         with:
           release: ${{ matrix.release }}
           usesh: true
-          prepare: pkg install -y git gmake
+          prepare: pkg install -y git
           run: |
             set -e
             git clone --depth 1 https://github.com/opnsense/plugins /tmp/op
@@ -44,7 +44,7 @@ jobs:
             cd /tmp/op/net/${PLUGIN}
             # PLUGIN_DEVEL= yields the release name (os-nebula, not os-nebula-devel).
             # The nebula dep is pulled from FreeBSD's pkg repo inside this VM.
-            gmake package PLUGIN_DEVEL=
+            make package PLUGIN_DEVEL=
             mkdir -p "$GITHUB_WORKSPACE/dist/${{ matrix.abi }}"
             find work/pkg -name '*.pkg' -exec cp {} "$GITHUB_WORKSPACE/dist/${{ matrix.abi }}/" \;
             ls -l "$GITHUB_WORKSPACE/dist/${{ matrix.abi }}/"
