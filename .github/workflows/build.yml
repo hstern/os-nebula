@@ -1,0 +1,66 @@
+# .github/workflows/build.yml — lives in EACH plugin repo (os-nebula, os-omada).
+# Independent tags drive independent builds/releases. `git tag v1.0 && git push --tags`
+# on os-nebula builds only os-nebula, publishes os-nebula-1.0.pkg to that Release,
+# then fires an instant repository_dispatch at the aggregator to rebuild the catalog.
+#
+# Repo layout: plugin source at  net/<name>/...  (mirror of the OPNsense plugins path).
+
+name: build
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch: {}
+
+permissions:
+  contents: write          # create/update the tag's Release
+
+env:
+  PLUGIN: nebula           # <-- set to "omada" in the os-omada repo
+  AGGREGATOR: hstern/opnsense-repo
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - abi: 'FreeBSD:14:amd64'   # OPNsense 26.x. Add FreeBSD:15:amd64 when OPNsense moves.
+            release: '14.2'
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build package in a FreeBSD ${{ matrix.release }} VM
+        uses: vmactions/freebsd-vm@v1
+        with:
+          release: ${{ matrix.release }}
+          usesh: true
+          prepare: pkg install -y git gmake
+          run: |
+            set -e
+            git clone --depth 1 https://github.com/opnsense/plugins /tmp/op
+            rm -rf /tmp/op/net/${PLUGIN}
+            cp -a net/${PLUGIN} /tmp/op/net/${PLUGIN}
+            cd /tmp/op/net/${PLUGIN}
+            # PLUGIN_DEVEL= yields the release name (os-nebula, not os-nebula-devel).
+            # The nebula dep is pulled from FreeBSD's pkg repo inside this VM.
+            gmake package PLUGIN_DEVEL=
+            mkdir -p "$GITHUB_WORKSPACE/dist/${{ matrix.abi }}"
+            find work/pkg -name '*.pkg' -exec cp {} "$GITHUB_WORKSPACE/dist/${{ matrix.abi }}/" \;
+            ls -l "$GITHUB_WORKSPACE/dist/${{ matrix.abi }}/"
+
+      - name: Attach .pkg to the release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/**/*.pkg
+
+      - name: Notify the aggregator (instant publish)
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          GH_TOKEN: ${{ secrets.DISPATCH_TOKEN }}   # fine-grained PAT, Contents:write on the aggregator
+        run: |
+          gh api "repos/${AGGREGATOR}/dispatches" \
+            -f event_type=plugin-released \
+            -F "client_payload[plugin]=${PLUGIN}" \
+            -F "client_payload[ref]=${GITHUB_REF_NAME}"

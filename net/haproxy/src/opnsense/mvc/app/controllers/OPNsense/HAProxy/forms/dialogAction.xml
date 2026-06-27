@@ -1,0 +1,346 @@
+<form>
+    <field>
+        <id>action.enabled</id>
+        <label>Enabled</label>
+        <type>checkbox</type>
+        <help>Enable this rule.</help>
+    </field>
+    <field>
+        <id>action.name</id>
+        <label>Name</label>
+        <type>text</type>
+        <help>Name to identify this rule.</help>
+    </field>
+    <field>
+        <id>action.description</id>
+        <label>Description</label>
+        <type>text</type>
+        <help>Description for this rule.</help>
+    </field>
+    <field>
+        <label>Optional condition</label>
+        <type>header</type>
+    </field>
+    <field>
+        <id>action.linkedAcls</id>
+        <label>Select conditions</label>
+        <type>select_multiple</type>
+        <help><![CDATA[Select one or more conditions to be used for this rule.]]></help>
+    </field>
+    <field>
+        <id>action.testType</id>
+        <label>Match Mode</label>
+        <type>dropdown</type>
+        <help><![CDATA[Apply this rule when conditions are met (IF) or unmet (UNLESS).]]></help>
+    </field>
+    <field>
+        <id>action.operator</id>
+        <label>Logic Operator</label>
+        <type>dropdown</type>
+        <help><![CDATA[Combine multiple conditions using AND (all must match) or OR (any must match).]]></help>
+    </field>
+    <field>
+        <label>Rule type</label>
+        <type>header</type>
+    </field>
+    <field>
+        <id>action.type</id>
+        <label>Type</label>
+        <type>dropdown</type>
+        <help><![CDATA[Choose a HAProxy action that should be used if the condition evaluates to true.]]></help>
+    </field>
+    <field>
+        <label>Parameters</label>
+        <type>header</type>
+        <style>type_table table_use_backend</style>
+    </field>
+    <field>
+        <id>action.use_backend</id>
+        <label>Use backend pool</label>
+        <type>dropdown</type>
+        <help><![CDATA[HAProxy will use this backend pool if the condition evaluates to true.]]></help>
+    </field>
+    <field>
+        <label>Parameters</label>
+        <type>header</type>
+        <style>type_table table_use_server</style>
+    </field>
+    <field>
+        <id>action.use_server</id>
+        <label>Use server</label>
+        <type>dropdown</type>
+        <help><![CDATA[HAProxy will use this server instead of other servers that are specified in the Backend Pool. The server must exist in the context where this rule is applied.]]></help>
+    </field>
+    <field>
+        <label>NOTE: The specified server must be present in the Backend Pool where this rule is applied.</label>
+        <type>info</type>
+    </field>
+    <field>
+        <label>Parameters</label>
+        <type>header</type>
+        <style>type_table table_monitor_fail</style>
+    </field>
+    <field>
+        <id>action.monitor_fail_uri</id>
+        <label>Monitoring URI</label>
+        <type>text</type>
+        <help><![CDATA[Specifies a URI which will be intercepted to return HAProxy's health status instead of forwarding the request. When a HTTP request is received, HAProxy will return either "HTTP/1.0 200 OK" or "HTTP/1.0 503 Service unavailable", depending on the fined failure conditions.]]></help>
+    </field>
+    <field>
+        <label>Parameters</label>
+        <type>header</type>
+        <style>type_table table_custom</style>
+    </field>
+    <field>
+        <id>action.custom</id>
+        <label>Option pass-through</label>
+        <type>textbox</type>
+        <help><![CDATA[Specify a HAProxy rule/ACL that is currently not supported by the GUI.]]></help>
+    </field>
+    <field>
+        <label>Parameters</label>
+        <type>header</type>
+        <style>type_table table_map_use_backend</style>
+    </field>
+    <field>
+        <id>action.map_use_backend_file</id>
+        <label>Map file</label>
+        <type>dropdown</type>
+        <help><![CDATA[HAProxy will extract the Host header from the HTTP request and search the map file for a match. If a match is found, the backend pool from the map file will be used.]]></help>
+    </field>
+    <field>
+        <id>action.map_use_backend_default</id>
+        <label>Default backend pool</label>
+        <type>dropdown</type>
+        <help><![CDATA[HAProxy will use this backend pool if no match is found in the map file.]]></help>
+    </field>
+    <field>
+        <label>Parameters</label>
+        <type>header</type>
+        <style>type_table table_map_data_use_backend</style>
+    </field>
+    <field>
+        <id>action.map_data_use_backend_file</id>
+        <label>Map file</label>
+        <type>dropdown</type>
+        <help><![CDATA[HAProxy will extract the Host header from the HTTP request and search the map file for a match. If a match is found, the backend pool from the map file will be used.]]></help>
+    </field>
+    <field>
+        <id>action.map_data_use_backend_input</id>
+        <label>Input Sample</label>
+        <type>textbox</type>
+        <help><![CDATA[The sample expression (e.g., path, req.ssl_sni, hdr(Host), str(active)) whose fetched value is used as the lookup key for the map file.]]></help>
+    </field>
+    <field>
+        <id>action.map_data_use_backend_default</id>
+        <label>Default backend pool</label>
+        <type>dropdown</type>
+        <help><![CDATA[HAProxy will use this backend pool if no match is found in the map file.]]></help>
+    </field>
+    <field>
+        <label>Parameters</label>
+        <type>header</type>
+        <style>type_table table_fcgi_pass_header</style>
+    </field>
+    <field>
+        <id>action.fcgi_pass_header</id>
+        <label>Header Name</label>
+        <type>text</type>
+        <help><![CDATA[Specify the name of a request header which will be passed to the FastCGI application. Most request headers are already available to the FastCGI application, prefixed with "HTTP_". Thus, this directive is only required to pass headers that are purposefully omitted. Currently, the headers "Authorization", "Proxy-Authorization" and hop-by-hop headers are omitted.]]></help>
+    </field>
+    <field>
+        <label>Parameters</label>
+        <type>header</type>
+        <style>type_table table_fcgi_set_param</style>
+    </field>
+    <field>
+        <id>action.fcgi_set_param</id>
+        <label>Parameter</label>
+        <type>text</type>
+        <help><![CDATA[Set a FastCGI parameter that should be passed to the application. Its value must follow HAProxy's <a href="http://docs.haproxy.org/3.2/configuration.html#8.2.4">Custom Log format rules</a>. With this directive, it is possible to overwrite the value of default FastCGI parameters.]]></help>
+    </field>
+    <field>
+        <label>Parameters</label>
+        <type>header</type>
+        <style>type_table table_compression</style>
+    </field>
+    <field>
+        <id>action.compression_direction</id>
+        <label>Compression Direction</label>
+        <type>dropdown</type>
+        <help><![CDATA[Whether HAProxy uses compression for HTTP responses, HTTP requests, or both. Be aware that most servers will not support request body decompression. For safekeeping only enable compression for HTTP responses.]]></help>
+    </field>
+    <field>
+        <id>action.compression_algo_res</id>
+        <label>Response Algorithm</label>
+        <type>dropdown</type>
+        <help><![CDATA[The compression algorithm used for HTTP responses. Compression will only be used depending on the Accept-Encoding request header.]]></help>
+    </field>
+    <field>
+        <id>action.compression_algo_req</id>
+        <label>Request Algorithm</label>
+        <type>dropdown</type>
+        <help><![CDATA[The compression algorithm used for HTTP requests. Compression will only be used depending on the Accept-Encoding request header.]]></help>
+    </field>
+    <field>
+        <id>action.compression_mime_res</id>
+        <label>Response Mime Types</label>
+        <type>select_multiple</type>
+        <style>tokenize</style>
+        <allownew>true</allownew>
+        <help><![CDATA[HTTP responses will use compression for the specified mime types, i.e. text/css, text/html, application/javascript.]]></help>
+        <hint>Enter MIME types here. Finish with TAB.</hint>
+    </field>
+    <field>
+        <id>action.compression_mime_req</id>
+        <label>Request Mime Types</label>
+        <type>select_multiple</type>
+        <style>tokenize</style>
+        <allownew>true</allownew>
+        <help><![CDATA[HTTP requests will use compression for the specified mime types, i.e. text/css, text/html, application/javascript.]]></help>
+        <hint>Enter MIME types here. Finish with TAB.</hint>
+    </field>
+    <field>
+        <id>action.compression_minsize_res</id>
+        <label>Response Minimum Size</label>
+        <type>text</type>
+        <help><![CDATA[Specifies a minimum file size for HTTP response compression in bytes. By avoiding unnecessary compression work on very small files, this may reduce CPU overhead. Entering 0 disables this option.]]></help>
+    </field>
+    <field>
+        <id>action.compression_minsize_req</id>
+        <label>Request Minimum Size</label>
+        <type>text</type>
+        <help><![CDATA[Specifies a minimum file size for HTTP request compression in bytes. By avoiding unnecessary compression work on very small files, this may reduce CPU overhead. Entering 0 disables this option.]]></help>
+    </field>
+    <field>
+        <id>action.compression_offloading</id>
+        <label>Compression Offloading</label>
+        <type>checkbox</type>
+        <help><![CDATA[When enabled, the load balancer will remove the Accept-Encoding header before forwarding a request to backend servers. This prevents the servers from performing compression, offloading that work to the load balancer. This may impact HAProxy's performance.]]></help>
+    </field>
+    <field>
+        <label>Parameters</label>
+        <type>header</type>
+        <style>type_table table_http-after-response</style>
+    </field>
+    <field>
+        <id>action.http_after_response_action</id>
+        <label>Action</label>
+        <type>dropdown</type>
+        <help><![CDATA[A detailed explanation of each action and examples can be found in <a href="http://docs.haproxy.org/3.2/configuration.html#4.3">HAProxy's documentation</a>.]]></help>
+    </field>
+    <field>
+        <id>action.http_after_response_option</id>
+        <label>Options/Values</label>
+        <type>text</type>
+        <help><![CDATA[Some actions require additional parameters and specific syntax. Examples and explanations can be found in the <a href="http://docs.haproxy.org/3.2/configuration.html#http-after-response">HAProxy's documentation</a>.]]></help>
+    </field>
+    <field>
+        <label>Parameters</label>
+        <type>header</type>
+        <style>type_table table_http-request</style>
+    </field>
+    <field>
+        <id>action.http_request_action</id>
+        <label>Action</label>
+        <type>dropdown</type>
+        <help><![CDATA[A detailed explanation of each action and examples can be found in <a href="http://docs.haproxy.org/3.2/configuration.html#4.3">HAProxy's documentation</a>.]]></help>
+    </field>
+    <field>
+        <id>action.http_request_option</id>
+        <label>Options/Values</label>
+        <type>text</type>
+        <help><![CDATA[Some actions require additional parameters and specific syntax. Examples and explanations can be found in the <a href="http://docs.haproxy.org/3.2/configuration.html#http-request">HAProxy's documentation</a>.]]></help>
+    </field>
+    <field>
+        <label>Parameters</label>
+        <type>header</type>
+        <style>type_table table_http-response</style>
+    </field>
+    <field>
+        <id>action.http_response_action</id>
+        <label>Action</label>
+        <type>dropdown</type>
+        <help><![CDATA[A detailed explanation of each action and examples can be found in <a href="http://docs.haproxy.org/3.2/configuration.html#4.3">HAProxy's documentation</a>.]]></help>
+    </field>
+    <field>
+        <id>action.http_response_option</id>
+        <label>Options/Values</label>
+        <type>text</type>
+        <help><![CDATA[Some actions require additional parameters and specific syntax. Examples and explanations can be found in the <a href="http://docs.haproxy.org/3.2/configuration.html#http-response">HAProxy's documentation</a>.]]></help>
+    </field>
+    <field>
+        <label>Parameters</label>
+        <type>header</type>
+        <style>type_table table_tcp-request</style>
+    </field>
+    <field>
+        <id>action.tcp_request_action</id>
+        <label>Action</label>
+        <type>dropdown</type>
+        <help><![CDATA[A detailed explanation of each action and examples can be found in <a href="http://docs.haproxy.org/3.2/configuration.html#4.3">HAProxy's documentation</a>.]]></help>
+    </field>
+    <field>
+        <id>action.tcp_request_option</id>
+        <label>Options/Values</label>
+        <type>text</type>
+        <help><![CDATA[Some actions require additional parameters and specific syntax. Examples and explanations can be found in the <a href="http://docs.haproxy.org/3.2/configuration.html#tcp-request">HAProxy's documentation</a>.]]></help>
+    </field>
+    <field>
+        <label>Parameters</label>
+        <type>header</type>
+        <style>type_table table_tcp-response</style>
+    </field>
+    <field>
+        <id>action.tcp_response_action</id>
+        <label>Action</label>
+        <type>dropdown</type>
+        <help><![CDATA[A detailed explanation of each action and examples can be found in <a href="http://docs.haproxy.org/3.2/configuration.html#4.3">HAProxy's documentation</a>.]]></help>
+    </field>
+    <field>
+        <id>action.tcp_response_option</id>
+        <label>Options/Values</label>
+        <type>text</type>
+        <help><![CDATA[Some actions require additional parameters and specific syntax. Examples and explanations can be found in the <a href="http://docs.haproxy.org/3.2/configuration.html#tcp-response">HAProxy's documentation</a>.]]></help>
+    </field>
+    <field>
+        <label>Conditional parameters</label>
+        <type>header</type>
+    </field>
+    <field>
+        <id>action.gpc_number</id>
+        <label>GPC number</label>
+        <type>text</type>
+        <help><![CDATA[Refers to the number of the General Purpose Counter, e.g. 0 or 1 when using gpc0 or gpc1 respectively. This value will be ignored in rules that do not support GPC.]]></help>
+    </field>
+    <field>
+        <id>action.gpt_number</id>
+        <label>GPT number</label>
+        <type>text</type>
+        <help><![CDATA[Refers to the number of the General Purpose Tag, e.g. 0 or 1 when using gpt0 or gpt1 respectively. This value will be ignored in rules that do not support GPT.]]></help>
+    </field>
+    <field>
+        <id>action.sc_number</id>
+        <label>SC number</label>
+        <type>text</type>
+        <help><![CDATA[Refers to the number of the Stick Counter, e.g. 0 or 1 when using sc0 or sc1 respectively. This value will be ignored in rules that do not support SC.]]></help>
+    </field>
+    <field>
+        <id>action.mapfile</id>
+        <label>Mapfile</label>
+        <type>dropdown</type>
+        <help><![CDATA[Load patterns from a map file.]]></help>
+    </field>
+    <field>
+        <id>action.map_default</id>
+        <label>Map default value</label>
+        <type>text</type>
+        <help><![CDATA[When a map file is specified, this is the default value.]]></help>
+    </field>
+    <field>
+        <id>action.sample_fetch</id>
+        <label>Sample fetch</label>
+        <type>text</type>
+        <help><![CDATA[Extracts a value from the request or connection context (e.g. path, header, source IP) to be used as input for converters or matching rules. May be used in combination with set-var and map files to create more complex rules, e.g.<br/>http-request set-var(req.rate_limit) path,map_beg(/path/to/mapfile,20)</br>http-request set-var(req.request_rate) base32+src,table_http_req_rate()]]></help>
+    </field>
+</form>
